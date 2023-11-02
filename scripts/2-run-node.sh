@@ -1,9 +1,8 @@
 #!/bin/bash
-ENODE_URL="$1"
-NODE_NUMBER="$2"
+ENODE_URL=`curl -X POST --data '{"jsonrpc":"2.0","method":"net_enode","params":[],"id":1}' localhost:8545 --silent | jq -r '.result'`
+NODE_NUMBER="$1"
 PORT_NUMBER=""$((8545-1+$NODE_NUMBER))""
 P2P_PORT_NUMBER=""$((30303-1+$NODE_NUMBER))""
-
 
 MY_PATH="$(dirname -- "${BASH_SOURCE[0]}")" # relative
 MY_PATH="$(cd -- "$MY_PATH" && pwd)" # absolutized and normalized

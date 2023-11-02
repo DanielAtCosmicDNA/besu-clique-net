@@ -2,8 +2,11 @@
 MY_PATH="$(dirname -- "${BASH_SOURCE[0]}")" # relative
 MY_PATH="$(cd -- "$MY_PATH" && pwd)" # absolutized and normalized
 
-NETWORK_NAME="Clique-Network"
-NUMBER_NODES=4
+ASSETS_PATH="$MY_PATH"/assets
+NETWORK_CONFIG_FILE="$ASSETS_PATH"/networkConfig.json
+
+NETWORK_NAME=`jq -r '.name' "$NETWORK_CONFIG_FILE"`
+NUMBER_NODES=`jq -r '.nodes' "$NETWORK_CONFIG_FILE"`
 
 mkdir "$NETWORK_NAME"
 NET_PATH="$(cd -- "$NETWORK_NAME" && pwd)" # absolutized and normalized
@@ -22,5 +25,5 @@ done
 wait
 
 NODE1_ADDRESS=`cat "$NET_PATH"/Node-1/data/node1Address`
-template=`jq -r '.extraData' "$MY_PATH"/assets/cliqueGenesisTemplate.json`
-jq --arg s "${template/\<Node 1 Address\>/${NODE1_ADDRESS:2}}" '.extraData = $s' "$MY_PATH"/assets/cliqueGenesisTemplate.json > "$NET_PATH"/genesis.json
+template=`jq -r '.extraData' "$ASSETS_PATH"/cliqueGenesisTemplate.json`
+jq --arg s "${template/\<Node 1 Address\>/${NODE1_ADDRESS:2}}" '.extraData = $s' "$ASSETS_PATH"/cliqueGenesisTemplate.json > "$NET_PATH"/genesis.json
